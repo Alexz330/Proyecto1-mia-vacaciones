@@ -229,7 +229,8 @@ void formatearExtructuras(int inicioParticion, int n,FILE * arch){
     fseek(arch, inicioParticion, SEEK_SET);
     fwrite(&auxsuperbloque, sizeof(superbloque), 1, arch);
     fclose(arch); //cierro el archivo
-    cout << "PARTICION FORMATEADA CORRECTAMENTE!!!"<<endl; //si da null es porque no se encontro el archivo
+    cout << "\033[1;" << "32" << "m[" <<"[Particion ha sido formateada con exito]"<< "] " <<endl;
+
 
     //   imprimirdatossuperbloque(auxmont);
 
@@ -255,7 +256,9 @@ bool aceptado = true;
         }else if(orden[0]=="-fs"){
             fs=orden[1];
         }else{
-            cout << "Comando:_" << orden[0] << "_No existente" << endl;
+          
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Comando:@@" << orden[0] << "@Invalido]"<< "] " <<endl;
+
             aceptado = false;
         }
     }
@@ -279,7 +282,9 @@ bool aceptado = true;
             strcpy(sc,path.c_str());
             FILE * arch = fopen(sc,"rb+");
             if(arch==NULL){
-                cout << "Error!\n No se puede leer el disco\n"; //si da null es porque no se encontro el archivo
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Error!\n No se puede leer el disco\n]"<< "] " <<endl;
+
+               
                 
             }else{
                 fread(&mbr,sizeof(mbr),1,arch);
@@ -338,16 +343,23 @@ bool aceptado = true;
                     formatearExtructuras(inicio,n,arch);
 
                 }else{
-                    cout<<"La particion no se encontro en el disco"<<endl;
-                    cout<<"Nombre de la particion:"<<particiones_montadas[indice_PartMount].nombre<<endl;
-                    cout<<"Path del disco:"<<particiones_montadas[indice_PartMount].path<<endl;
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Particion no encontrada en el disco]"<< "] " <<endl;
+                    
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Particion no encontrada en el disco]"<< "] " <<endl;
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> "<<"Nombre de la particion:"<<particiones_montadas[indice_PartMount].nombre<<"]"<< "] " <<endl;
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> "<<"ruta del disco:"<<particiones_montadas[indice_PartMount].path<<"]"<< "] " <<endl;
+
+
+                   
                 }
                 
             }
             
             
         }else{
-            cout<<"La particion no ha sido montada"<<endl;
+            
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> La particion no ha sido montada]"<< "] " <<endl;
+
         }
     }
 }

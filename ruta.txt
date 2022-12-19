@@ -1,0 +1,1 @@
+exec -path=/home/alexis/Escritorio/arch.mia

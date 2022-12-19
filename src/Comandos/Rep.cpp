@@ -4,6 +4,10 @@
 #include <string>
 #include <string.h>
 
+#include <graphviz/cgraph.h>
+#include <graphviz/gvc.h>
+
+
 #include "../Globales/particionesGlobales.cpp"
 #include "../utilities/split.cpp"
 #include "../utilities/verficadorCarpetas.cpp"
@@ -98,9 +102,9 @@ void reporteDISK(string path,string pathDestino){
                 int fin = aux[i].part_start + aux[i].part_size;
                 if((fin - finUltimaEBR) >1){
                     float porcentaje = (float)(fin - finUltimaEBR)/(float)(mbr.mbr_tamano);
-                    cout<<"Espacio final ebr:"<<porcentaje<<endl;
+                
                     porcentaje = porcentaje*100;
-                    dot+="| Espacio Libre Extendida \\n"+ to_string(porcentaje)+"% ";
+                    dot+="| Espacio Libre \\n"+ to_string(porcentaje)+"% ";
                 }
             }
             dot+=" }} ";
@@ -137,12 +141,12 @@ void reporteDISK(string path,string pathDestino){
     fclose(arch);
     //escribiendo el dot
     ofstream file;
-    file.open(rutaActual() + pathDestino+"dot.dot");
+    file.open(rutaActual() + pathDestino+".dot");
     file << dot;
     file.close();  
     //creando la imagen dot
-    cout<<"Creando la imagen de grapviz"<<endl;
-    string comando ="dot -Tjpg "+rutaActual()+pathDestino+"dot.dot -o "+rutaActual()+pathDestino; 
+
+    string comando ="dot -Tjpg "+rutaActual()+pathDestino+".dot -o "+rutaActual()+pathDestino; 
     system(comando.c_str());
     
 
@@ -155,7 +159,7 @@ void reporteMBR(string path,string pathDestino){
     FILE *arch = fopen(sc,"rb+");
     fread(&mbr,sizeof(mbr),1,arch);
     //Iniciando con el reporte en graphviz con el MBR
-    string dot="digraph G { \nconcentrate=True; \nrankdir=TB; \nnode [shape=record];\n";
+    string dot="digraph G { \nconcentrate=True; \nrankdir=LR; \nnode [shape=record, style=rounded];\nedge [color=white]";
     dot+="MBR[label = \"MBR | {Nombre:|mbr_tamaño|mbr_fecha_creacion|mbr_disk_signature|Disk_fit} | {";
     vector<string> tem = Split(path,"/");
     string nombreDisco = tem[tem.size()-1];
@@ -174,10 +178,10 @@ void reporteMBR(string path,string pathDestino){
     for (size_t i = 0; i < 4; i++){
         if(mbr.mbr_partition[i].part_status!='0'){
             string tipo(1,mbr.mbr_partition[i].part_type);
-            dot+="MBR_partition_"+to_string(i)+"[label = \"Particion_"+to_string(i)+" | {part_status_"+to_string(i)+":|part_type_"+to_string(i)+"|part_fit_"+to_string(i)+"|part_stax_"+to_string(i)+"|part_size_"+to_string(i)+"|part_name_"+to_string(i)+"} | {";
+            dot+="MBR_partition_"+to_string(i)+"[label = \"Particion_"+to_string(i)+" | {particion_status_"+to_string(i)+":|particion_type_"+to_string(i)+"|particion_fit_"+to_string(i)+"|particion_stax_"+to_string(i)+"|particion_size_"+to_string(i)+"|part_name_"+to_string(i)+"} | {";
             dot+="1|"+tipo+"|"+mbr.mbr_partition[i].part_fit+"|"+to_string(mbr.mbr_partition[i].part_start) +"|"+to_string(mbr.mbr_partition[i].part_size) +"|"+mbr.mbr_partition[i].part_name+"}\"];\n";
             //enlazando EL MBR con la particion
-            dot+="MBR -> MBR_partition_"+to_string(i)+";\n";
+            dot+="MBR -> MBR_particion_"+to_string(i)+";\n";
         }
         if(mbr.mbr_partition[i].part_type=='e'){
             indiceExtendida = i;
@@ -195,7 +199,7 @@ void reporteMBR(string path,string pathDestino){
             string fit_(1,ebr.part_fit);
             string status_(1,ebr.part_status);
             string name_=ebr.part_name;
-            dot+="EBR_"+i+"[label = \"EBR_"+i+"| { Nombre:|part_status_"+i+"|part_fit_"+i+"|part_start_"+i+"|part_size_"+i+"|part_next_"+i+"} | {";
+            dot+="EBR_"+i+"[label = \"EBR_"+i+"| { Nombre:|particion_status_"+i+"|particion_fit_"+i+"|particion_start_"+i+"|particion_size_"+i+"|particion_next_"+i+"} | {";
             dot+=name_+"|"+status_+"|"+fit_+"|"+to_string(ebr.part_start) +"|"+to_string(ebr.part_size)+"|"+to_string(ebr.part_next)+"}\"];\n";
             //condicion de salida del while
             if(ebr.part_next==-1){
@@ -221,14 +225,14 @@ void reporteMBR(string path,string pathDestino){
     fclose(arch);
     //creando Escribiendo el archivo dot en el disco
     ofstream file;
-    file.open(rutaActual() + pathDestino+"dot.dot");
+    file.open(rutaActual() + pathDestino+".dot");
     file << dot;
     file.close();  
     //creando la imagen dot
-    cout<<"Creando la imagen de grapviz"<<endl;
-    string comando ="dot -Tjpg "+rutaActual()+pathDestino+"dot.dot -o "+rutaActual()+pathDestino; 
+   
+    string comando ="dot -Tjpg "+rutaActual()+pathDestino+".dot -o "+rutaActual()+pathDestino; 
     system(comando.c_str());
-    //GraficarImagenDOT(pathDestino+"dot.dot",pathDestino);
+
 }
 
 
@@ -319,7 +323,9 @@ void reporteSuperBloque(string path,string pathDestino,string nombreParticion){
         }
     }else{
         sePuede = false;
-        cout<<"No se pudo crear el reporte del superbloque"<<endl;
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Error al generar reporte]"<< "] " <<endl;
+        
+
         cout<<"Nombre comparado:"<<nombreParticion<<endl;
         cout<<"Indices"<<indice<<"-"<<indiceExtendida<<endl;
     }
@@ -327,12 +333,12 @@ void reporteSuperBloque(string path,string pathDestino,string nombreParticion){
     if(sePuede){
         dot+="\"];\n}";
         ofstream file;
-        file.open(rutaActual() + pathDestino+"dot.dot");
+        file.open(rutaActual() + pathDestino+".dot");
         file << dot;
         file.close();  
         //creando la imagen dot
-        cout<<"Creando la imagen de grapviz"<<endl;
-        string comando ="dot -Tjpg "+rutaActual()+pathDestino+"dot.dot -o "+rutaActual()+pathDestino; 
+
+        string comando ="dot -Tjpg "+rutaActual()+pathDestino+".dot -o "+rutaActual()+pathDestino; 
         system(comando.c_str());
     }
     
@@ -383,7 +389,8 @@ void Rep::Reporte(vector<string> ins){
         }else if (orden[0] == "-id"){
             id = orden[1];
         }else{
-            cout << "Comando:_" << orden[0] << "_No existente" << endl;
+                        cout << "\033[1;" << "31" << "m[" <<"Comando:@@" << orden[0] << "@@Incorrecto"<< "] " <<endl;
+
             aceptado = false;
         }
     }
@@ -410,6 +417,7 @@ void Rep::Reporte(vector<string> ins){
                     if(nombreParticion!=""){
                         reporteSuperBloque(pathMBR,path,nombreParticion);
                     }else{
+
                         cout<<"El nombre de la particion no esta en las montadas"<<endl;
                     }
                 }

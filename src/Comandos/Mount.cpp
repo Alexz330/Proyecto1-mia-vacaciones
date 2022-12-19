@@ -53,7 +53,8 @@ void Mount::Montar(vector<string> ins){
         }
         else
         {
-            cout << "Comando:_" << orden[0] << "_No existente" << endl;
+            cout << "\033[1;" << "31" << "m[" <<"Comando:@@" << orden[0] << "@@No existente"<< "] " <<endl;
+            
             aceptado = false;
         }
     }
@@ -63,6 +64,8 @@ void Mount::Montar(vector<string> ins){
         {
             if(strcmp(particiones_montadas[i].nombre,name.c_str())==0){
                 cout<<"La particion "<<name<<" ya ha sido montada-->"<<particiones_montadas[i].nombre<<endl;
+                cout << "\033[1;" << "31" << "m[" <<"[ERROR "<<"La particion "<<name<<" montada anteriormente =="<<particiones_montadas[i].nombre<<"]"<< "] " <<endl;
+
                 aceptado=false;
             }
         }
@@ -157,8 +160,13 @@ void Mount::Montar(vector<string> ins){
                 pa.letra[0]=letras[numero-1];
                 particiones_montadas.push_back(pa);
                 cout<<"Particion Montada"<<endl;
+                cout << "\033[1;" << "32" << "m[" <<"[Particion Montada]"<< "] " <<endl;
+
             }else{
-                cout<<"Particion no Existente en el disco"<<endl;
+            
+               cout << "\033[1;" << "31" << "m[" <<"[ERROR-> La particion no ha sido montada]"<< "] " <<endl;
+
+
             }
             
         }
@@ -166,7 +174,10 @@ void Mount::Montar(vector<string> ins){
     //Imprimiendo las particiones montadas
         for (size_t i = 0; i < particiones_montadas.size(); i++)
         {
-            cout<<particiones_montadas[i].path<<"|"<<particiones_montadas[i].nombre<<"|"<<particiones_montadas[i].carnet<<particiones_montadas[i].numero<<particiones_montadas[i].letra<<endl;
+                cout << "\033[1;" << "32" << "m[" <<"["<< particiones_montadas[i].path<<"#"<<particiones_montadas[i].nombre<<"#"<<particiones_montadas[i].carnet<<particiones_montadas[i].numero<<particiones_montadas[i].letra<<"]"<< "] " <<endl;
+
+
+          
         }
 }
 

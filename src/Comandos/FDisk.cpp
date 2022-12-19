@@ -1,4 +1,3 @@
-
 #include <vector>
 #include <iostream>
 #include <string>
@@ -47,7 +46,8 @@ void FDisk::AdminPartitions(vector<string> ins){
             if (atoi(orden[1].c_str()) > 0){
                 size = orden[1];
             }else{
-                cout << "Tamaño indicado es 0 o negativo" << endl;
+                cout << "\033[1;" << "31" << "m[" <<"Tamaño indicado es menor o igual a 0" << "] " <<endl;
+
                 aceptado = false;
             }
         }
@@ -55,7 +55,7 @@ void FDisk::AdminPartitions(vector<string> ins){
             f = orden[1];
         }else if (orden[0] == "-u"){
             u = orden[1];
-        }else if (orden[0] == "-type"){
+        }else if (orden[0] == "-t"){
             type = orden[1];
         }else if (orden[0] == "-delete"){
             del = orden[1];
@@ -74,7 +74,8 @@ void FDisk::AdminPartitions(vector<string> ins){
                 path = rutaActual() + "/Disco sin nombre.dk";
             }
         }else{
-            cout << "Comando:_" << orden[0] << "_No existente" << endl;
+
+            cout << "\033[1;" << "31" << "m[" <<"Comando:@@" << orden[0] << "@@Incorrecto"<< "] " <<endl;
             aceptado = false;
         }
     }
@@ -108,7 +109,8 @@ void FDisk::AdminPartitions(vector<string> ins){
                 if(strcmp(mbr.mbr_partition[i].part_name, name.c_str())==0){
                     existe=true;
                     char respuesta = 'n';
-                    cout << "Particion encontrada. la particion se eliminara s/n" << endl;
+                    cout << "\033[1;" << "34" << "m[" <<"La particion se eliminara SI(s)|NO(n)"<< "] " <<endl;
+                
                     cin >> respuesta;
                     if (respuesta == 'S' || respuesta == 's'){
                         Partition vacia;
@@ -120,7 +122,8 @@ void FDisk::AdminPartitions(vector<string> ins){
                         vacia.part_name[0] = '\0';
                         mbr.mbr_partition[i]=vacia;
                     }else{
-                        cout << "Comando cancelado" << endl;
+
+                        cout << "\033[1;" << "31" << "m[" <<"Opcion invalida ...cancelando comando"<< "] " <<endl;
                     }
                 }
                 if(mbr.mbr_partition[i].part_type=='E'||mbr.mbr_partition[i].part_type=='e'){
@@ -142,7 +145,8 @@ void FDisk::AdminPartitions(vector<string> ins){
                         fclose(file);
                         if(strcmp(ebrImpr.part_name,name.c_str())==0){//verificamos si hay coincidencia con el nombre de la EBR
                             char respuesta = 'n';
-                            cout << "Particion encontrada. la particion se eliminara s/n" << endl;
+                            cout << "\033[1;" << "34" << "m[" <<"La particion se eliminara SI(s)|NO(n)"<< "] " <<endl;
+
                             cin >> respuesta;
                             if (respuesta == 'S' || respuesta == 's'){// se confirmo la eliminacion
                                 existe = true;
@@ -176,7 +180,8 @@ void FDisk::AdminPartitions(vector<string> ins){
                                 fclose(file);
                                 break;
                             }else{
-                                cout<<"Comando cancelado"<<endl;
+
+                                cout << "\033[1;" << "31" << "m[" <<"Comando cancelado"<< "] " <<endl;
                             }
                         }
                         //condicion de salida del while
@@ -191,7 +196,9 @@ void FDisk::AdminPartitions(vector<string> ins){
             }
             
             if(!existe){
-                cout<<"No se puede eliminar una Particion no encontrada"<<endl;
+  
+                cout << "\033[1;" << "31" << "m[" <<"[ERROR->Particion no encontrada]"<< "] " <<endl;
+
             }
         }
         else if (add != ""){ //anañadir o disminuir espacio a la particion
@@ -221,12 +228,15 @@ void FDisk::AdminPartitions(vector<string> ins){
                     //verificando que el nuevo tamaño este entre part_start y indice_maximo
                     int Tamano_Maximo=indice_maximo-mbr.mbr_partition[i].part_start;
                     if((atoi(add.c_str())*multiplicador+mbr.mbr_partition[i].part_size)>Tamano_Maximo){
-                        cout<<"NO EXISTE ESPACIO DISPONIBLE PARA AUMENTAR"<<endl;
+
+                        cout << "\033[1;" << "31" << "m[" <<"[ERROR->No existe espacio disponible para aumentar]"<< "] " <<endl;
                     }else if((atoi(add.c_str())*multiplicador+mbr.mbr_partition[i].part_size)<0){
-                        cout<<"EL TAMAÑO INTRUDUCIDO DEJARA CON ESPACIO NEGATIVO A LA PARTICION"<<endl;
+           
+                        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> tamano ingresado invalido]"<< "] " <<endl;
+
                     }else{
                         mbr.mbr_partition[i].part_size=atoi(add.c_str())*multiplicador+mbr.mbr_partition[i].part_size;
-                        cout<<"Tamaño modificado con exito"<<endl;
+                        cout << "\033[1;" << "32" << "m[" <<"Tamano del disco modificado exitosamente"<< "] " <<endl;
                     }
                 }
             }
@@ -247,7 +257,7 @@ void FDisk::AdminPartitions(vector<string> ins){
                                 if(tamanio<=(ebrImpr.part_next-ebrImpr.part_start-ebrImpr.part_size) && (tamanio+ebrImpr.part_size)>=0){
                                     //se añade el tamaño deseado VALUAR TAMAÑO NEGATIVO
                                     ebrImpr.part_size = ebrImpr.part_size+tamanio;
-                                    cout<<"Tamaño modificado exitosamente"<<endl;
+                                cout << "\033[1;" << "32" << "m[" <<"Tamano del disco modificado exitosamente"<< "] " <<endl;
                                     //escribiendo el ebrImpr
                                     FILE *file = fopen(sc,"rb+");
                                     fseek(file,ebrImpr.part_start,SEEK_SET);
@@ -256,9 +266,12 @@ void FDisk::AdminPartitions(vector<string> ins){
                                     existe = true;
                                     break;
                                 }else if((tamanio+ebrImpr.part_size)<0){
-                                    cout<<"Tamano resultante es negativo"<<endl;
+                        
+                                      cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Tamano resultante es negativo]"<< "] " <<endl;
                                 }else{
-                                    cout<<"No hay espacio suficiente para aumentar"<<endl;
+                              
+                                    cout << "\033[1;" << "31" << "m[" <<"[ERROR-> No hay espacio suficiente para aumentar]"<< "] " <<endl;
+
                                 }
                             }
                             //condicion de salida del while
@@ -271,7 +284,9 @@ void FDisk::AdminPartitions(vector<string> ins){
             }
             
             if(!existe){
-                cout<<"Particion no encontrada para agregar espacio"<<endl;
+  
+                cout << "\033[1;" << "31" << "m[" <<"[ERROR-> No se pudo agregar espacion. Particion no encotrada]"<< "] " <<endl;
+
             }
         }else if (size!="" && (type=="P" || type=="E" || type=="p" || type=="e") ){ //crear particion extendida o primaria
             int tamanio = atoi(size.c_str())*multiplicador;//tamaño deseado de la nueva particion
@@ -282,16 +297,22 @@ void FDisk::AdminPartitions(vector<string> ins){
             {
                 if(mbr.mbr_partition[i].part_status=='0' && indice ==-1){
                     indice=i;
+                    
                 }
             }
             if(indice==-1){
-                cout<<"Ya no hay Espacio en el arreglo para otra particion"<<endl;
+
+                cout << "\033[1;" << "31" << "m[" <<"[ERROR-> no se pudo agregar espacion. Particion no encotrada]"<< "] " <<endl;
+
+                
             }
             //buscando que el nombre de la particion sea diferente
             for (int i = 0; i < 4; i++)
             {
                 if(strcmp(mbr.mbr_partition[i].part_name,name.c_str())==0){
-                    cout<<"Ya existe una particion con el mismo nombre"<<endl;
+
+                    cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Ya existe una particion con el mismo nombre]"<< "] " <<endl;
+
                     indice=-1;
                 }
             }
@@ -301,7 +322,9 @@ void FDisk::AdminPartitions(vector<string> ins){
                 {
                     if(mbr.mbr_partition[i].part_type==tolower(type[0])){
                         indice=-1;
-                        cout<<"Ya existe una particion Extendida"<<endl;
+                        
+                        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Ya existe una particion Extendida]"<< "] " <<endl;
+
                     }
                 }
                 
@@ -358,11 +381,17 @@ void FDisk::AdminPartitions(vector<string> ins){
                         fwrite(&ebr, sizeof(ebr), 1, file);
                         //cierro el archivo
                         fclose(file);
-                        cout<<"EBR inicial de Particion Extendida creada"<<endl;
+                       
+                        cout << "\033[1;" << "32" << "m[" <<"[EBR inicial de Particion Extendida creada]"<< "] " <<endl;
+
                     }
-                    cout<<"Particion creada con exito"<<endl;
+        
+                        cout << "\033[1;" << "32" << "m[" <<"[Particion creada exitosamente]"<< "] " <<endl;
+
                 }else{
-                    cout<<"No hay suficiente espacio en el disco para crear la particion"<<endl;
+                    
+                    cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Insuficiente espacio en el disco para crear la particion]"<< "] " <<endl;
+
                 }
             }
         }else if (size!="" && (type=="L" || type=="l") ){//Particion Logica
@@ -374,7 +403,9 @@ void FDisk::AdminPartitions(vector<string> ins){
                         }
                     }
                     if(indice==-1){
-                        cout<<"No existe ninguna particion extendida"<<endl;
+                        
+                        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> No existe ninguna particion extendida]"<< "] " <<endl;
+                        
                         return;
                     }
                     int inicio = mbr.mbr_partition[indice].part_start;
@@ -392,7 +423,8 @@ void FDisk::AdminPartitions(vector<string> ins){
                             fclose(file);
                             if(strcmp(ebrImpr.part_name,name.c_str())==0){
                                 indice=-1;
-                                cout<<"Nombre de la particion ya existe"<<endl;
+                                cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Nombre de la particion ya existe]"<< "] " <<endl;
+
                             }
                             espacioUsado+=sizeof(EBR)+ebrImpr.part_size;//sumar ebr---------------------
                             //condicion de salida del while
@@ -404,7 +436,9 @@ void FDisk::AdminPartitions(vector<string> ins){
                     }
                     espacioUsado+=atoi(size.c_str())*multiplicador;
                     if(espacioUsado>mbr.mbr_partition[indice].part_size){
-                        cout<<"No existe suficiente espacio en la particion extendida para crear la particion logica"<<endl;
+                        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> No hay suficiente espacio en la particion extendida para crear la particion logica"<< "] " <<endl;
+
+
                         indice=-1;
                     }
                     if(indice!=-1){//Existe una particion extendida
@@ -512,27 +546,31 @@ void FDisk::AdminPartitions(vector<string> ins){
         AcutalizarDisco(path,mbr);
         //REPORTE DEL DISCO
         ImprimirDisco(mbr);
-        cout<<"DATOS DE LAS EBR"<<endl;
+        cout<<"Informacion de ebr"<<endl;
+        cout << "\033[1;" << "32" << "m[" <<"[Informacion de ebr]"<< "] " <<endl;
+
         if(indice!=-1){
             //Imprimiendo las EBR
             int inicio = mbr.mbr_partition[indice].part_start;
             int contador=0;
             while(true){
                 cout<<"EBR numero: "<<contador<<endl;
+        cout << "\033[1;" << "32" << "m[" <<"[EBR numero: "<<contador<< "]] " <<endl;
+
                 contador++;
-                //recuperando el ebr de la posicion indicada
+               
                 EBR ebrImpr;
                 FILE *file = fopen(sc,"rb+");
                 fseek(file,inicio,SEEK_SET);
                 fread(&ebrImpr,sizeof(ebrImpr),1,file);
                 fclose(file);
-                //imprimiendo los datos del ebr
-                cout<<"Nombre: "<<ebrImpr.part_name<<endl;
-                cout<<"Estado: "<<ebrImpr.part_status<<endl;
-                cout<<"Inicio: "<<ebrImpr.part_start<<endl;
-                cout<<"Tamaño: "<<ebrImpr.part_size<<endl;
-                cout<<"Siguiente: "<<ebrImpr.part_next<<endl;
-                cout<<"Fit: "<<ebrImpr.part_fit<<endl;
+
+                cout<<"name: "<<ebrImpr.part_name<<endl;
+                cout<<"state: "<<ebrImpr.part_status<<endl;
+                cout<<"start: "<<ebrImpr.part_start<<endl;
+                cout<<"size: "<<ebrImpr.part_size<<endl;
+                cout<<"next: "<<ebrImpr.part_next<<endl;
+                cout<<"fit: "<<ebrImpr.part_fit<<endl;
                 //condicion de salida del while
                 if(ebrImpr.part_next!=-1){
                     inicio = ebrImpr.part_next;
@@ -542,7 +580,11 @@ void FDisk::AdminPartitions(vector<string> ins){
             }
         }
     }else{
-        cout << "Error en la entrada de datos" << endl;
+       
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Error en la entrada de datos]"<< "] " <<endl;
+
+        
+            
     }
 }
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+
 #include "../utilities/rutaActual.cpp"
 #include "../utilities/split.cpp"
 //Exportantdo comandos
@@ -63,15 +64,20 @@ void Analizador::ExecInstruciones(vector<string> instrucciones){
     }else if(comando=="REP"){
         Rep::Reporte(instrucciones);
     }else
+
     {
-        cout << "Comando pricipal no existe" << endl;
+        cout << "\033[1;" << "31" << "m[" <<"[Commando invalido]"<< "] " <<endl;
+
+
     }
  
-    cout << "Se ha finalizado" << endl;
 };
 
 vector<string> Analizador::ObtenerArrlegloInstrucciones(){
-    cout << "Nueva Operacion: " << endl;
+
+
+    cout << "\033[1;" << "34" << "m[" <<"Ingrese nuevo comando" << "] " <<endl;
+
     string entrada;
     getline(cin, entrada);
  
@@ -80,7 +86,8 @@ vector<string> Analizador::ObtenerArrlegloInstrucciones(){
 }
 
 void Analizador::LeerIntrucciones(vector<string>instruccion){
-    cout<<"analizando instruciones"<<endl;
+     cout << "\033[1;" << "34" << "m[" <<"Leyendo instruciones" << "] " <<endl;
+
     string path = ""; 
     bool aceptado=true;
     for (size_t i = 1; i < instruccion.size(); i++)
@@ -100,12 +107,15 @@ void Analizador::LeerIntrucciones(vector<string>instruccion){
             path = orden[1];
             if (orden[1] == "local")
             {
-                path = rutaActual() + "/Disco sin nombre.dk";
+                path = rutaActual() + "/Disco sin nombre.dsk";
             }
         }
         else
         {
-            cout << "Comando:_" << orden[0] << "_No existente" << endl;
+               
+            
+            cout << "\033[1;" << "31" << "m[" <<"Comando:@@" << orden[0] << "@@No existente"<< "] " <<endl;
+ 
             aceptado = false;
         }
     }
@@ -122,7 +132,8 @@ void Analizador::LeerIntrucciones(vector<string>instruccion){
             //break;
 
         }else{//se trata de una instruccion
-            cout<<"LINEA->"<<linea<<"__"<<endl;
+            cout << "\033[1;" << "32" << "m[" <<"Comando:"<<linea<<"@@"<< "] " <<endl;
+       
             vector<string> EntradaDividida = Split(linea, " ");
             
             for (size_t i = 0; i < EntradaDividida[0].size(); i++)
