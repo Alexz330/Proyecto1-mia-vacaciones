@@ -92,7 +92,9 @@ void MkDisk::CreateDisk(vector <string> ins){
         }
         else
         {
-            cout << "Comando:_" << orden[0] << "_No existente" << endl;
+            
+            cout << "\033[1;" << "31" << "m[" <<"Comando:@@" << orden[0] << "@@Incorrecto"<< "] " <<endl;
+
             aceptado = false;
         }
     }
@@ -115,17 +117,24 @@ void MkDisk::CreateDisk(vector <string> ins){
         if(pathAux!="local"){
             VerificarCarpetas(pathAux);
         }
-        cout<<"VERIFICACION DE CARPETAS TERMINADA"<<endl;
+    
         mbr = InicialiarMBR_Particiones(mbr);
         mbr.mbr_tamano= atoi(size.c_str()) * multiplicador;
         mbr.disk_fit=f;
         ReadDisk(path, mbr);
         ImprimirDisco(mbr);
-        cout << "Disco Creado correctamente" << endl;
+  
+        cout << "\033[1;" << "32" << "m[" <<"Disco creado con exito"<< "] " <<endl;
+
+
     }
     else
     {
         cout << "Error en la entrada de datos" << endl;
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Entrada de datos invalida]"<< "] " <<endl;
+
+          
+
     }
 }
 

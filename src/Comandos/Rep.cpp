@@ -55,7 +55,7 @@ void reporteDISK(string path,string pathDestino){
         string nombre =aux[i].part_name; 
         //graficando las particiones logicas
         if(aux[i].part_type=='e'){//si es extendida
-            dot+="| {"+ nombre +"\\n"+to_string(usado) +"% ";
+            dot+="| {extentida:"+ nombre +"\\n"+to_string(usado) +"% ";
             dot+=" | {";
             int posicionEBR = aux[i].part_start;
             int posicionFinal = aux[i].part_size;
@@ -178,7 +178,7 @@ void reporteMBR(string path,string pathDestino){
     for (size_t i = 0; i < 4; i++){
         if(mbr.mbr_partition[i].part_status!='0'){
             string tipo(1,mbr.mbr_partition[i].part_type);
-            dot+="MBR_partition_"+to_string(i)+"[label = \"Particion_"+to_string(i)+" | {particion_status_"+to_string(i)+":|particion_type_"+to_string(i)+"|particion_fit_"+to_string(i)+"|particion_stax_"+to_string(i)+"|particion_size_"+to_string(i)+"|part_name_"+to_string(i)+"} | {";
+            dot+="MBR_partition_"+to_string(i)+"[label = \"Particion_"+to_string(i)+" | {particion_status_"+to_string(i)+":|particion_type_"+to_string(i)+"|particion_fit_"+to_string(i)+"|particion_stax_"+to_string(i)+"|particion_size_"+to_string(i)+"|particion_name_"+to_string(i)+"} | {";
             dot+="1|"+tipo+"|"+mbr.mbr_partition[i].part_fit+"|"+to_string(mbr.mbr_partition[i].part_start) +"|"+to_string(mbr.mbr_partition[i].part_size) +"|"+mbr.mbr_partition[i].part_name+"}\"];\n";
             //enlazando EL MBR con la particion
             dot+="MBR -> MBR_particion_"+to_string(i)+";\n";

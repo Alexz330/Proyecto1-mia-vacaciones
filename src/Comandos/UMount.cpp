@@ -30,7 +30,7 @@ void UMount::Desmontar(vector<string> ins){
         {
             id = orden[1];
         }else{
-            cout << "Comando:_" << orden[0] << "_No existente" << endl;
+            cout << "Comando => @@" << orden[0] << "@@Invalido" << endl;
             aceptado = false;
         }
     }
@@ -42,7 +42,7 @@ void UMount::Desmontar(vector<string> ins){
             if(strcmp(id.c_str(),identificador.c_str())==0){
                 aceptado=false;
                 particiones_montadas.erase(particiones_montadas.begin()+i);
-                cout<<"Particion: "<<identificador<<" Desmontada"<<endl;
+                cout<<"******Particion ->"<<identificador<<" Desmontada*******"<<endl;
             }
         }
         if (aceptado)

@@ -75,7 +75,7 @@ void FDisk::AdminPartitions(vector<string> ins){
             }
         }else{
 
-            cout << "\033[1;" << "31" << "m[" <<"Comando:@@" << orden[0] << "@@Incorrecto"<< "] " <<endl;
+            cout << "\033[1;" << "31" << "m[" <<"Comando:@@" << orden[0] << "@@No existente"<< "] " <<endl;
             aceptado = false;
         }
     }
@@ -547,7 +547,7 @@ void FDisk::AdminPartitions(vector<string> ins){
         //REPORTE DEL DISCO
         ImprimirDisco(mbr);
         cout<<"Informacion de ebr"<<endl;
-        cout << "\033[1;" << "32" << "m[" <<"[Informacion de ebr]"<< "] " <<endl;
+        cout << "\033[1;" << "32" << "m[" <<"*********[Informacion de ebr]***********"<< "] " <<endl;
 
         if(indice!=-1){
             //Imprimiendo las EBR
@@ -555,7 +555,7 @@ void FDisk::AdminPartitions(vector<string> ins){
             int contador=0;
             while(true){
                 cout<<"EBR numero: "<<contador<<endl;
-        cout << "\033[1;" << "32" << "m[" <<"[EBR numero: "<<contador<< "]] " <<endl;
+        cout << "\033[1;" << "32" << "m[" <<"####[EBR numero: "<<contador<< "]] " <<endl;
 
                 contador++;
                
@@ -565,12 +565,12 @@ void FDisk::AdminPartitions(vector<string> ins){
                 fread(&ebrImpr,sizeof(ebrImpr),1,file);
                 fclose(file);
 
-                cout<<"name: "<<ebrImpr.part_name<<endl;
-                cout<<"state: "<<ebrImpr.part_status<<endl;
-                cout<<"start: "<<ebrImpr.part_start<<endl;
-                cout<<"size: "<<ebrImpr.part_size<<endl;
-                cout<<"next: "<<ebrImpr.part_next<<endl;
-                cout<<"fit: "<<ebrImpr.part_fit<<endl;
+                cout<<"name  : "  <<ebrImpr.part_name<<endl;
+                cout<<"state : "  <<ebrImpr.part_status<<endl;
+                cout<<"start : "  <<ebrImpr.part_start<<endl;
+                cout<<"size  : "  <<ebrImpr.part_size<<endl;
+                cout<<"next  : "  <<ebrImpr.part_next<<endl;
+                cout<<"fit   : "  <<ebrImpr.part_fit<<endl;
                 //condicion de salida del while
                 if(ebrImpr.part_next!=-1){
                     inicio = ebrImpr.part_next;
@@ -580,8 +580,8 @@ void FDisk::AdminPartitions(vector<string> ins){
             }
         }
     }else{
-       
-        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Error en la entrada de datos]"<< "] " <<endl;
+
+        cout << "\033[1;" << "31" << "m[" <<"[ERROR-> Nombre de la particion ya existe]"<< "] " <<endl;
 
         
             

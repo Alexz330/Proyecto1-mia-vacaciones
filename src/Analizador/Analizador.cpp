@@ -53,7 +53,7 @@ void Analizador::ExecInstruciones(vector<string> instrucciones){
         FDisk::AdminPartitions(instrucciones);
     }else if(comando=="MOUNT"){
         Mount::Montar(instrucciones);
-    }else if(comando=="UMOUNT"){
+    }else if(comando=="UNMOUNT"){
         UMount::Desmontar(instrucciones);
     }else if(comando=="MKFS"){
         MkFs::Formatear(instrucciones);
