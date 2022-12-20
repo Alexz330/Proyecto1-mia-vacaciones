@@ -28,7 +28,7 @@ void reporteDISK(string path,string pathDestino){
     FILE *arch = fopen(sc,"rb+");
     fread(&mbr,sizeof(mbr),1,arch);
     //Iniciando con el reporte en graphviz con el MBR
-    string dot = "digraph G { \nconcentrate=True; \nrankdir=TB; \nnode [shape=record];\n";
+    string dot = "digraph G { \nconcentrate=True; \nrankdir=TB; bgcolor=\"#a5a5a5\";\n \nnode [shape=record];\n";
     dot+="MBR[label = \"MBR ";
     //ordenando el arreglo de particiones
     Partition aux[4];
@@ -159,7 +159,7 @@ void reporteMBR(string path,string pathDestino){
     FILE *arch = fopen(sc,"rb+");
     fread(&mbr,sizeof(mbr),1,arch);
     //Iniciando con el reporte en graphviz con el MBR
-    string dot="digraph G { \nconcentrate=True; \nrankdir=LR; \nnode [shape=record, style=rounded];\nedge [color=white]";
+    string dot="digraph G { \nconcentrate=True; \nrankdir=LR; bgcolor=\"#a5a5a5\";\n \nnode [shape=record, style=rounded];\nedge [color=white]";
     dot+="MBR[label = \"MBR | {Nombre:|mbr_tamaño|mbr_fecha_creacion|mbr_disk_signature|Disk_fit} | {";
     vector<string> tem = Split(path,"/");
     string nombreDisco = tem[tem.size()-1];
@@ -178,7 +178,7 @@ void reporteMBR(string path,string pathDestino){
     for (size_t i = 0; i < 4; i++){
         if(mbr.mbr_partition[i].part_status!='0'){
             string tipo(1,mbr.mbr_partition[i].part_type);
-            dot+="MBR_partition_"+to_string(i)+"[label = \"Particion_"+to_string(i)+" | {particion_status_"+to_string(i)+":|particion_type_"+to_string(i)+"|particion_fit_"+to_string(i)+"|particion_stax_"+to_string(i)+"|particion_size_"+to_string(i)+"|particion_name_"+to_string(i)+"} | {";
+            dot+="MBR_particion_"+to_string(i)+"[label = \"Particion_"+to_string(i)+" | {particion_status_"+to_string(i)+":|particion_type_"+to_string(i)+"|particion_fit_"+to_string(i)+"|particion_stax_"+to_string(i)+"|particion_size_"+to_string(i)+"|particion_name_"+to_string(i)+"} | {";
             dot+="1|"+tipo+"|"+mbr.mbr_partition[i].part_fit+"|"+to_string(mbr.mbr_partition[i].part_start) +"|"+to_string(mbr.mbr_partition[i].part_size) +"|"+mbr.mbr_partition[i].part_name+"}\"];\n";
             //enlazando EL MBR con la particion
             dot+="MBR -> MBR_particion_"+to_string(i)+";\n";
@@ -215,7 +215,7 @@ void reporteMBR(string path,string pathDestino){
     //realizando los enlaces entre particiones
     //particion extendida con el inicio de las EBR
     if(indiceExtendida!=-1){
-        dot+="MBR_partition_"+to_string(indiceExtendida)+" -> "+"EBR_1;\n";
+        dot+="MBR_particion_"+to_string(indiceExtendida)+" -> "+"EBR_1;\n";
     }
     //finalizando la extrucutra del dot
     dot+="}";
